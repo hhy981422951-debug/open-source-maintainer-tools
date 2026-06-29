@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Maintainer Pulse</title>
+  <style>
+    :root {
+      --bg: #f6f7f4;
+      --ink: #17211f;
+      --muted: #62706b;
+      --line: #d8ded7;
+      --panel: #ffffff;
+      --blue: #2563eb;
+      --green: #157347;
+      --yellow: #a15c00;
+      --red: #b42318;
+      --teal: #0f766e;
+      --shadow: 0 10px 30px rgba(23, 33, 31, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+
+    button, textarea, input {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      min-height: 38px;
+      border-radius: 7px;
+      padding: 0 12px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      border-color: #aab6b0;
+      box-shadow: 0 3px 10px rgba(23, 33, 31, 0.08);
+    }
+
+    button.primary {
+      background: var(--ink);
+      color: white;
+      border-color: var(--ink);
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    header {
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(14px);
+      position: sticky;
+      top: 0;
+      z-index: 3;
+    }
+
+    .bar {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 7px;
+      background:
+        linear-gradient(135deg, #17211f 0 45%, #f0b429 45% 62%, #0f766e 62% 100%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35);
+      flex: none;
+    }
+
+    h1 {
+      font-size: 18px;
+      margin: 0;
+      letter-spacing: 0;
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 2px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    main {
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: minmax(320px, 0.95fr) minmax(360px, 1.05fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel h2 {
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfa;
+    }
+
+    .input-area {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 280px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 12px;
+      color: var(--ink);
+      background: #fff;
+      line-height: 1.45;
+    }
+
+    textarea:focus, input:focus {
+      outline: 2px solid rgba(37, 99, 235, 0.22);
+      border-color: var(--blue);
+    }
+
+    .samples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 96px;
+      background: #fff;
+    }
+
+    .metric small {
+      color: var(--muted);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .metric strong {
+      font-size: 24px;
+      display: block;
+      line-height: 1.1;
+    }
+
+    .meter {
+      height: 9px;
+      border-radius: 999px;
+      background: #e8ece8;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .meter span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: var(--green);
+      transition: width 220ms ease;
+    }
+
+    .labels, .checks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 9px;
+      color: #23302d;
+      background: #f9faf8;
+      font-size: 13px;
+    }
+
+    .chip.bug { border-color: #f0b3ad; background: #fff4f2; color: var(--red); }
+    .chip.docs { border-color: #b7d7d4; background: #eefaf8; color: var(--teal); }
+    .chip.feature { border-color: #bfd0ff; background: #f1f5ff; color: var(--blue); }
+    .chip.question { border-color: #e8c888; background: #fff8e8; color: var(--yellow); }
+
+    .section {
+      border-top: 1px solid var(--line);
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .section h3 {
+      margin: 0;
+      font-size: 13px;
+      color: #33413d;
+    }
+
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #111816;
+      color: #e9f0ec;
+      border-radius: 8px;
+      padding: 12px;
+      line-height: 1.45;
+      min-height: 112px;
+      max-height: 260px;
+      overflow: auto;
+    }
+
+    .history {
+      display: grid;
+      gap: 8px;
+      max-height: 240px;
+      overflow: auto;
+    }
+
+    .history button {
+      text-align: left;
+      min-height: 44px;
+      display: grid;
+      gap: 2px;
+      align-content: center;
+    }
+
+    .history small {
+      color: var(--muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .visual {
+      height: 180px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(90deg, rgba(21,115,71,0.09), transparent 34%),
+        linear-gradient(135deg, rgba(37,99,235,0.08), rgba(240,180,41,0.11));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lane {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      height: 1px;
+      background: rgba(23,33,31,0.14);
+    }
+
+    .node {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--blue);
+      box-shadow: 0 0 0 5px rgba(37,99,235,0.14);
+      transition: transform 220ms ease, background 220ms ease;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 900px) {
+      main { grid-template-columns: 1fr; }
+      .bar { align-items: flex-start; flex-direction: column; }
+      .actions { justify-content: flex-start; }
+    }
+
+    @media (max-width: 560px) {
+      main { padding: 10px; }
+      .grid { grid-template-columns: 1fr; }
+      textarea { min-height: 220px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="bar">
+        <div class="brand">
+          <div class="mark" aria-hidden="true"></div>
+          <div>
+            <h1>Maintainer Pulse</h1>
+            <div class="subtitle">Local issue triage for small open-source projects</div>
+          </div>
+        </div>
+        <div class="actions">
+          <button id="clearBtn">Clear</button>
+          <button id="copyBtn" class="primary">Copy report</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel" aria-label="Issue input">
+        <div class="panel-head">
+          <h2>Issue or pull request text</h2>
+          <span class="note" id="wordCount">0 words</span>
+        </div>
+        <div class="input-area">
+          <textarea id="issueText" placeholder="Paste an issue, bug report, feature request, pull request summary, or support question."></textarea>
+          <div class="samples">
+            <button data-sample="bug">Bug sample</button>
+            <button data-sample="feature">Feature sample</button>
+            <button data-sample="docs">Docs sample</button>
+          </div>
+        </div>
+        <div class="section">
+          <h3>Recent local scans</h3>
+          <div class="history" id="history"></div>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="Triage results">
+        <div class="panel-head">
+          <h2>Triage snapshot</h2>
+          <span class="note" id="confidenceLabel">Waiting for input</span>
+        </div>
+        <div class="grid">
+          <div class="metric">
+            <small>Priority</small>
+            <strong id="priority">-</strong>
+            <div class="meter"><span id="priorityMeter"></span></div>
+          </div>
+          <div class="metric">
+            <small>Effort</small>
+            <strong id="effort">-</strong>
+            <div class="meter"><span id="effortMeter"></span></div>
+          </div>
+          <div class="metric">
+            <small>Likely type</small>
+            <strong id="type">-</strong>
+          </div>
+          <div class="metric">
+            <small>Next owner</small>
+            <strong id="owner">-</strong>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Suggested labels</h3>
+          <div class="labels" id="labels"></div>
+        </div>
+
+        <div class="section">
+          <h3>Maintenance map</h3>
+          <div class="visual" aria-hidden="true" id="visual">
+            <div class="lane" style="top: 35%"></div>
+            <div class="lane" style="top: 65%"></div>
+            <div class="node" id="nodeA"></div>
+            <div class="node" id="nodeB"></div>
+            <div class="node" id="nodeC"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Maintainer checklist</h3>
+          <div class="checks" id="checks"></div>
+        </div>
+
+        <div class="section">
+          <h3>Reply draft</h3>
+          <pre id="reply">Paste an issue to generate a calm first response.</pre>
+        </div>
+
+        <div class="section">
+          <h3>Release note draft</h3>
+          <pre id="releaseNote">Useful changes will be summarized here.</pre>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const samples = {
+      bug: `The CLI crashes on Windows when a config path contains spaces.
+
+Steps:
+1. Install the latest release.
+2. Put the project in C:\\Users\\Name\\My Project.
+3. Run maintainer-pulse scan.
+
+Expected: the scan completes.
+Actual: TypeError cannot read properties of undefined.
+
+This blocks our release workflow.`,
+      feature: `It would be helpful to export triage reports as Markdown.
+
+Our maintainers copy the same information into release notes and discussions. A single button that creates labels, priority, checklist, and a reply would save time.
+
+No urgency, but this would improve repeated maintenance work.`,
+      docs: `The README does not explain how to run the tool locally.
+
+New contributors are asking where the sample data lives and whether the app uses any external API. Please add a quick start section and mention that analysis runs in the browser.`
+    };
+
+    const rules = [
+      { label: "bug", className: "bug", words: ["crash", "error", "bug", "broken", "fails", "failure", "exception", "typeerror"] },
+      { label: "feature", className: "feature", words: ["feature", "request", "improve", "export", "support", "add", "enhancement"] },
+      { label: "docs", className: "docs", words: ["readme", "docs", "documentation", "guide", "quick start", "explain"] },
+      { label: "question", className: "question", words: ["how", "why", "where", "question", "help"] },
+      { label: "release", className: "", words: ["release", "version", "changelog", "workflow"] },
+      { label: "windows", className: "", words: ["windows", "powershell", "path", "drive"] },
+      { label: "good first issue", className: "", words: ["typo", "readme", "small", "simple"] }
+    ];
+
+    const els = {
+      input: document.querySelector("#issueText"),
+      wordCount: document.querySelector("#wordCount"),
+      priority: document.querySelector("#priority"),
+      effort: document.querySelector("#effort"),
+      type: document.querySelector("#type"),
+      owner: document.querySelector("#owner"),
+      priorityMeter: document.querySelector("#priorityMeter"),
+      effortMeter: document.querySelector("#effortMeter"),
+      labels: document.querySelector("#labels"),
+      checks: document.querySelector("#checks"),
+      reply: document.querySelector("#reply"),
+      releaseNote: document.querySelector("#releaseNote"),
+      confidence: document.querySelector("#confidenceLabel"),
+      history: document.querySelector("#history"),
+      nodeA: document.querySelector("#nodeA"),
+      nodeB: document.querySelector("#nodeB"),
+      nodeC: document.querySelector("#nodeC")
+    };
+
+    function scoreWords(text, wordList) {
+      const lower = text.toLowerCase();
+      return wordList.reduce((sum, word) => sum + (lower.includes(word) ? 1 : 0), 0);
+    }
+
+    function analyze(text) {
+      const trimmed = text.trim();
+      const words = trimmed ? trimmed.split(/\s+/).length : 0;
+      const hits = rules.map(rule => ({
+        ...rule,
+        score: scoreWords(trimmed, rule.words)
+      })).filter(rule => rule.score > 0);
+
+      const urgent = scoreWords(trimmed, ["block", "urgent", "security", "crash", "data loss", "production", "regression"]);
+      const reproduction = scoreWords(trimmed, ["steps", "expected", "actual", "reproduce", "environment"]);
+      const priorityScore = Math.min(100, urgent * 24 + reproduction * 10 + Math.min(words, 160) / 4);
+      const effortScore = Math.min(100, words / 3 + scoreWords(trimmed, ["refactor", "api", "breaking", "migration", "multiple", "workflow"]) * 18);
+
+      const best = hits[0] || { label: "needs-triage", className: "" };
+      const type = best.label === "bug" ? "Bug" :
+        best.label === "feature" ? "Feature" :
+        best.label === "docs" ? "Docs" :
+        best.label === "question" ? "Question" : "Triage";
+
+      const owner = type === "Docs" ? "Docs maintainer" :
+        type === "Bug" && reproduction > 1 ? "Core maintainer" :
+        type === "Feature" ? "Roadmap owner" : "Triage lead";
+
+      const labels = hits.length ? hits : [{ label: "needs-triage", className: "", score: 1 }];
+      const checks = [
+        reproduction > 1 ? "Reproduction included" : "Ask for reproduction",
+        urgent > 0 ? "Check release impact" : "Can batch with routine triage",
+        type === "Feature" ? "Compare with roadmap" : "Confirm scope",
+        words > 80 ? "Summarize before discussion" : "Ask for missing details"
+      ];
+
+      return { words, labels, priorityScore, effortScore, type, owner, checks, reproduction, urgent };
+    }
+
+    function level(score) {
+      if (score >= 70) return "High";
+      if (score >= 38) return "Medium";
+      if (score > 0) return "Low";
+      return "-";
+    }
+
+    function setMeter(el, score, kind) {
+      el.style.width = `${score}%`;
+      el.style.background = score >= 70 ? "var(--red)" : score >= 38 ? "var(--yellow)" : kind === "effort" ? "var(--blue)" : "var(--green)";
+    }
+
+    function renderChips(target, items) {
+      target.innerHTML = "";
+      items.forEach(item => {
+        const chip = document.createElement("span");
+        chip.className = `chip ${item.className || ""}`;
+        chip.textContent = item.label || item;
+        target.appendChild(chip);
+      });
+    }
+
+    function createReply(result, text) {
+      if (!text.trim()) return "Paste an issue to generate a calm first response.";
+      const labelList = result.labels.map(x => x.label).join(", ");
+      return `Thanks for opening this. I tagged it as ${labelList} with ${level(result.priorityScore).toLowerCase()} priority.
+
+Next step:
+- ${result.checks[0]}
+- ${result.checks[1]}
+
+I will keep the scope focused and update the thread when there is a clear fix or decision.`;
+    }
+
+    function createReleaseNote(result, text) {
+      if (!text.trim()) return "Useful changes will be summarized here.";
+      const shortText = text.trim().split(/\n+/)[0].slice(0, 140);
+      return `- ${result.type}: ${shortText}${shortText.length >= 140 ? "..." : ""}
+- Triage: ${level(result.priorityScore)} priority, ${level(result.effortScore)} effort
+- Suggested owner: ${result.owner}`;
+    }
+
+    function updateVisual(result) {
+      const p = Math.max(8, result.priorityScore);
+      const e = Math.max(12, result.effortScore);
+      els.nodeA.style.transform = `translate(${12 + p * 2.6}px, 54px)`;
+      els.nodeB.style.transform = `translate(${22 + e * 2.2}px, 108px)`;
+      els.nodeC.style.transform = `translate(${40 + (p + e) * 1.15}px, 80px)`;
+      els.nodeA.style.background = result.priorityScore >= 70 ? "var(--red)" : "var(--green)";
+      els.nodeB.style.background = "var(--blue)";
+      els.nodeC.style.background = result.type === "Docs" ? "var(--teal)" : "var(--yellow)";
+    }
+
+    function saveHistory(text, result) {
+      if (!text.trim()) return;
+      const list = JSON.parse(localStorage.getItem("maintainerPulseHistory") || "[]");
+      const item = {
+        text,
+        type: result.type,
+        priority: level(result.priorityScore),
+        date: new Date().toLocaleString()
+      };
+      const next = [item, ...list.filter(entry => entry.text !== text)].slice(0, 8);
+      localStorage.setItem("maintainerPulseHistory", JSON.stringify(next));
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const list = JSON.parse(localStorage.getItem("maintainerPulseHistory") || "[]");
+      els.history.innerHTML = "";
+      if (!list.length) {
+        const empty = document.createElement("div");
+        empty.className = "note";
+        empty.textContent = "Scans stay in this browser only.";
+        els.history.appendChild(empty);
+        return;
+      }
+      list.forEach(item => {
+        const button = document.createElement("button");
+        button.innerHTML = `<span>${item.type} / ${item.priority}</span><small>${item.text.replace(/</g, "&lt;").slice(0, 90)}</small>`;
+        button.addEventListener("click", () => {
+          els.input.value = item.text;
+          update();
+        });
+        els.history.appendChild(button);
+      });
+    }
+
+    function update() {
+      const text = els.input.value;
+      const result = analyze(text);
+      els.wordCount.textContent = `${result.words} words`;
+      els.priority.textContent = level(result.priorityScore);
+      els.effort.textContent = level(result.effortScore);
+      els.type.textContent = text.trim() ? result.type : "-";
+      els.owner.textContent = text.trim() ? result.owner : "-";
+      els.confidence.textContent = text.trim() ? `${Math.min(98, 52 + result.labels.length * 9)}% confidence` : "Waiting for input";
+      setMeter(els.priorityMeter, result.priorityScore, "priority");
+      setMeter(els.effortMeter, result.effortScore, "effort");
+      renderChips(els.labels, result.labels);
+      renderChips(els.checks, result.checks);
+      els.reply.textContent = createReply(result, text);
+      els.releaseNote.textContent = createReleaseNote(result, text);
+      updateVisual(result);
+      clearTimeout(update.timer);
+      update.timer = setTimeout(() => saveHistory(text, result), 550);
+    }
+
+    function reportText() {
+      return `Maintainer Pulse report
+
+Priority: ${els.priority.textContent}
+Effort: ${els.effort.textContent}
+Type: ${els.type.textContent}
+Owner: ${els.owner.textContent}
+
+Labels:
+${Array.from(els.labels.children).map(x => `- ${x.textContent}`).join("\n")}
+
+Checklist:
+${Array.from(els.checks.children).map(x => `- ${x.textContent}`).join("\n")}
+
+Reply draft:
+${els.reply.textContent}
+
+Release note:
+${els.releaseNote.textContent}`;
+    }
+
+    document.querySelectorAll("[data-sample]").forEach(button => {
+      button.addEventListener("click", () => {
+        els.input.value = samples[button.dataset.sample];
+        update();
+      });
+    });
+
+    document.querySelector("#clearBtn").addEventListener("click", () => {
+      els.input.value = "";
+      update();
+    });
+
+    document.querySelector("#copyBtn").addEventListener("click", async () => {
+      const text = reportText();
+      try {
+        await navigator.clipboard.writeText(text);
+        document.querySelector("#copyBtn").textContent = "Copied";
+        setTimeout(() => document.querySelector("#copyBtn").textContent = "Copy report", 1000);
+      } catch {
+        window.prompt("Copy report", text);
+      }
+    });
+
+    els.input.addEventListener("input", update);
+    renderHistory();
+    update();
+  </script>
+</body>
+</html>
